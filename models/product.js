@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
                 return true;
         }
 
+        static findProduct(id) {
+            return Product.findOne(
+                { id: id }       
+            ).then((data) => {
+                return data
+            })
+        }
+
         static updateProduct(id, body) {
             return Product.update(
                 body,

@@ -14,7 +14,7 @@ const cartController = require('./controllers/cart');
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/product', productController);
-app.use('/cart', productController);
+app.use('/user', cartController);
 
 
 app.listen(3000,()=>{

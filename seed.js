@@ -2,7 +2,7 @@ const { sequelize, User } = require('./models') // you need the connection to th
 
 const seed = async () => {
     try {
-        await sequelize.sync({ force: true }) //sync to your database!
+        await sequelize.sync() //sync to your database!
 
         const userA = await User.create({
             name: 'userA',
@@ -12,7 +12,6 @@ const seed = async () => {
         })
     } catch (err) {
         console.log("----------------------------------");
-
         console.log("err", err);
         console.log("----------------------------------");
 
