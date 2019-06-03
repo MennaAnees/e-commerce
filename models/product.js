@@ -17,8 +17,9 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static findProduct(id) {
+
             return Product.findOne(
-                { id: id }       
+                { where: { id: id } }
             ).then((data) => {
                 return data
             })
@@ -29,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
                 body,
                 { where: { id: id } }
             ).then(() => {
-                return Product.findOne({ id: id })
+                return Product.findOne({ where: { id: id } })
             }
             ).then((result) => {
                 if (result)
@@ -40,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         static deleteProduct(id) {
             return Product.destroy(
                 { where: { id: id } }
-            ).then((data) => {                
+            ).then((data) => {
                 return data
             })
         }
@@ -49,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         name: { type: DataTypes.STRING, allowNull: false },
         description: { type: DataTypes.TEXT },
         slug: { type: DataTypes.STRING },
-        image: { type: DataTypes.STRING, allowNull: false },
+        image: { type: DataTypes.BLOB, allowNull: false },
         regular_price: { type: DataTypes.INTEGER, allowNull: false },
         sale_price: { type: DataTypes.INTEGER },
         date_on_sale_from: { type: DataTypes.DATE },

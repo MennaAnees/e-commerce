@@ -3,44 +3,54 @@ const Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
 
     class Cart extends Sequelize.Model {
-        static findCart(id) {
-            return Cart.findOne(
-                { id: id }       
+    
+        static findUserCart(userId) {
+            return Cart.findAll(
+                {
+                    userId: userId
+                }
             ).then((data) => {
-                return data
+                if (data)
+                    return data
             })
         }
 
-        static updateCart(userId, cartId, count) {
+        static updateCart(userId, productId, count) {
             return Cart.update(
                 { count: count },
                 {
                     where: {
-                        id: cartId,
+                        id: productId,
                         userId: userId
                     }
                 }
             ).then(() => {
-                return Cart.findOne({ id: cartId })
+                return Cart.findOne({ where: { id: productId } })
             }
-            ).then((result) => {                
+            ).then((result) => {
                 if (result)
                     return result.dataValues;
             })
         }
 
-        static deleteCart(id) {
+        static deleteCart(id , userId) {
             return Cart.destroy(
-                { where: { id: id } }
-            ).then((data) => {                
+                {
+                    where:
+                    {   
+                        id : id,
+                        userId: userId,
+                    }
+                }
+            ).then((data) => {
                 return data
             })
         }
     }
     Cart.init({
         count: { type: DataTypes.INTEGER, defaultValue: 1 },
-        userId: { type: DataTypes.STRING, allowNull: false },
-        productId: { type: DataTypes.STRING, allowNull: false },
+        userId: { type: DataTypes.INTEGER, allowNull: false },
+        productId: { type: DataTypes.INTEGER, allowNull: false },
     }, { sequelize });
 
     return Cart;

@@ -1,4 +1,4 @@
-const { sequelize, User } = require('./models') // you need the connection to the database and Campus model
+const { sequelize, User, Product } = require('./models') // you need the connection to the database and Campus model
 
 const seed = async () => {
     try {
@@ -10,6 +10,9 @@ const seed = async () => {
         const userB = await User.create({
             name: 'userB',
         })
+
+        console.log('Seed Successful!')
+
     } catch (err) {
         console.log("----------------------------------");
         console.log("err", err);
@@ -19,7 +22,7 @@ const seed = async () => {
 
 
     sequelize.close() //close your db connection else the connection stays alive else your process hangs.
-    console.log('Seed Successful!') //Have a prompt to let you know everything is working correctly!
+    //Have a prompt to let you know everything is working correctly!
 }
 
 seed() //initialize the sync!

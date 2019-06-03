@@ -3,16 +3,20 @@ const router = express.Router();
 const { Cart, Product } = require('../models');
 const config = require('./../config');
 
-router.post("/:id/cart/", async (req, res) => {
-    const { body } = req;
-    try {
+router.post("/:userId/cart", async (req, res) => {
+    const { body: { productId, count }, params: { userId } } = req;
 
-        const validProduct = await Product.findProduct(body.productId);
+    try {
+        const validProduct = await Product.findProduct(productId);
 
         if (!validProduct)
-            throw 'Please add a valid product';
+            throw new Error('Please add a valid product');
 
-        const addedCart = await Cart.create(body);
+        const addedCart = await Cart.create({
+            productId,
+            count,
+            userId
+        });
 
         res.send({
             status: config.success,
@@ -20,80 +24,86 @@ router.post("/:id/cart/", async (req, res) => {
         });
     } catch (error) {
 
-        res.send({
-            status: config.fail,
-            errorr: error || "fail to add to cart"
-        })
+        res
+            .status(config.fail)
+            .send({
+                status: config.fail,
+                error: error.message
+            })
     }
 
 });
 
-router.put("/:userId/cart/:cartId", async (req, res) => {
-    const count = req.body.count;
-    const userId = req.params.userId;
-    const cartId = req.params.cartId;
+router.put("/:userId/cart/:productId", async (req, res) => {
+    const { body, params } = req;
 
     try {
 
-        const cart = await Cart.updateCart(userId, cartId, count);
-        
+        const cart = await Cart.updateCart(params.userId, params.productId, body.count);
+
         if (!cart)
-            throw "Fail to update cart"
+            throw new Error("Fail to update cart")
 
         res.send({
             status: config.success,
             data: cart
         });
     } catch (error) {
-        
-        res.send({
-            status: config.fail,
-            errorr: error || "fail to update product"
-        })
+
+        res
+            .status(config.fail)
+            .send({
+                status: config.fail,
+                error: error.message
+            })
     }
 });
 
-router.delete("/:userId/cart/:cartId", async (req, res) => { 
-   
-    const cartId = req.params.cartId
-    try {
+router.delete("/:userId/cart/:productId", async (req, res) => {
+    const { params: { productId , userId } } = req;
 
-        const cart = await Cart.deleteCart(cartId);
-        
+    try {
+        const cart = await Cart.deleteCart(productId , userId);
+
         if (!cart)
-            throw "Fail to delete cart"
+            throw new Error("Fail to delete cart")
 
         res.send({
             status: config.success,
             data: "Cart is deleted successFully"
         });
-    } catch (error) {        
-        res.send({
-            status: config.fail,
-            errorr: error || "fail to delete cart"
-        })
+    } catch (error) {
+        res
+            .status(config.fail)
+            .send({
+                status: config.fail,
+                errorr: error.message
+            })
     }
 });
 
-router.get("/:id/cart/:cartId", async (req, res) => {
-    const cartId = req.params.cartId;
+router.get("/:userId/cart/", async (req, res) => {
+    const { body: { userId } } = req;
+
 
     try {
-        const cart = await Cart.findCart(cartId);
-        
-        if(!cart)
-            throw 'Fail to find cart';
+        const cart = await Cart.findUserCart(userId);
+
+        if (!cart)
+            throw new Error('Fail to find cart');
 
         res.send({
             status: config.success,
             data: cart
         });
     } catch (error) {
-        
-        res.send({
-            status: config.fail,
-            errorr: error
-        })
+
+        res
+            .status(config.fail)
+            .send({
+                status: config.fail,
+                errorr: error.message
+            })
     }
 });
 
