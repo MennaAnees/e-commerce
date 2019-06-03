@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
 
     class Cart extends Sequelize.Model {
-    
+
         static findUserCart(userId) {
             return Cart.findAll(
                 {
@@ -33,12 +33,11 @@ module.exports = (sequelize, DataTypes) => {
             })
         }
 
-        static deleteCart(id , userId) {
+        static deleteCart(userId) {
             return Cart.destroy(
                 {
                     where:
-                    {   
-                        id : id,
+                    {
                         userId: userId,
                     }
                 }

@@ -35,11 +35,10 @@ router.post("/:userId/cart", async (req, res) => {
 });
 
 router.put("/:userId/cart/:productId", async (req, res) => {
-    const { body, params } = req;
+    const { body: { count }, params: { userId, productId } } = req;
 
     try {
-
-        const cart = await Cart.updateCart(params.userId, params.productId, body.count);
+        const cart = await Cart.updateCart(userId, productId, count);
 
         if (!cart)
             throw new Error("Fail to update cart")
@@ -59,11 +58,11 @@ router.put("/:userId/cart/:productId", async (req, res) => {
     }
 });
 
-router.delete("/:userId/cart/:productId", async (req, res) => {
-    const { params: { productId , userId } } = req;
+router.delete("/:userId/cart", async (req, res) => {
+    const { params: { userId } } = req;
 
     try {
-        const cart = await Cart.deleteCart(productId , userId);
+        const cart = await Cart.deleteCart(userId);
 
         if (!cart)
             throw new Error("Fail to delete cart")
