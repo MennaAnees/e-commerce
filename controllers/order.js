@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { Order, Cart } = require('../models');
+const { Order, Cart, OrderItems, Product } = require('../models');
 const config = require('./../config');
+
 
 router.post("/:userId", async (req, res) => {
     const { body, params: { userId } } = req;
@@ -16,6 +17,7 @@ router.post("/:userId", async (req, res) => {
 
         const order = {
             ...body,
+            userId: userId,
             status: 'pending'
         };
         await Order.createOrder(order, userCart, userId);
@@ -23,7 +25,7 @@ router.post("/:userId", async (req, res) => {
         res
             .send({
                 status: config.success,
-                data: 'order created'
+                data: "Order Created SuccessFully"
             });
 
     } catch (error) {
@@ -38,8 +40,9 @@ router.post("/:userId", async (req, res) => {
 });
 
 router.put("/:orderId/status", async (req, res) => {
-        
-    const { body : {status }, params: { orderId } } = req;
+    debugger;
+
+    const { body: { status }, params: { orderId } } = req;
     try {
         const order = await Order.updateOrder(orderId, status);
 
@@ -60,4 +63,35 @@ router.put("/:orderId/status", async (req, res) => {
     }
 
 });
+
+router.get("/:orderId/user/:userId", async (req, res) => {
+    const { params: { orderId, userId } } = req;
+    try {
+        const order = await Order.findOne(
+            {
+                where: { id: orderId, userId: userId }
+            });
+        if (!order)
+            throw new Error("Fail to view order");
+
+        const products = await Order.findProducts(orderId)
+        if (!products)
+            throw new Error("Fail to view the order");
+
+
+        res.send({
+            status: config.success,
+            order: order,
+            items: products
+        });
+    } catch (error) {
+        res
+            .status(config.fail)
+            .send({
+                status: config.fail,
+                error: error
+            })
+    }
+});
+
 module.exports = router;

@@ -25,3 +25,4 @@ e-commerce platform developed by NodeJs and MySQL
 3-order:
     -user create order: '/order/userId'
     -change order status: '/order/orderId/status'  
+    -view user order and items: '/order/orderId/user/userId'

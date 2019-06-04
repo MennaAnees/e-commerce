@@ -7,7 +7,7 @@ router.post("/:userId/cart", async (req, res) => {
     const { body: { productId, count }, params: { userId } } = req;
 
     try {
-        const validProduct = await Product.findProduct(productId);
+        const validProduct = await Product.findProduct(productId, count);
 
         if (!validProduct)
             throw new Error('Please add a valid product');

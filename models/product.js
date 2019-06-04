@@ -16,10 +16,16 @@ module.exports = (sequelize, DataTypes) => {
                 return true;
         }
 
-        static findProduct(id) {
+        static findProduct(id, count) {
 
             return Product.findOne(
-                { where: { id: id } }
+                {
+                    where:
+                    {
+                        id: id,
+                        stock_quantity: count
+                    }
+                }
             ).then((data) => {
                 return data
             })

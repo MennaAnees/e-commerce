@@ -66,17 +66,41 @@ module.exports = (sequelize, DataTypes) => {
           where: { id: id }
         }
       ).then(() => {
-        // console.log();
-        
         return Order.findOne({ where: { id: id } })
       }
       ).then((result) => {
-        console.log("_--------------------",result);
-        
         if (result)
           return result.dataValues;
       })
     }
+
+    static async findProducts(orderId) {
+      var productIds = [];
+      await sequelize.models.OrderItems.findAll(
+        {
+          where: { order_id: orderId },
+          include: [
+            {
+              model: sequelize.models.Order,
+              as: 'orders'
+            },
+            {
+              model: sequelize.models.Product,
+              as: 'products'
+            }
+          ],
+        }
+      ).then((data) => {
+        return productIds = data.map(orderItem => +orderItem.product_id);
+      });
+      var products = await sequelize.models.Product.findAll({
+        where: { id: { [Op.or]: productIds } }
+      });
+      if (products)
+        return products.map(product => product.dataValues)
+
+    }
+
   }
 
 
@@ -102,7 +126,8 @@ module.exports = (sequelize, DataTypes) => {
       payment_method: {
         type: DataTypes.ENUM(["COD", "CREDIT"]),
         allowNull: false
-      }
+      },
+      userId: { type: DataTypes.INTEGER }
     },
     { sequelize }
   );
