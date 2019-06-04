@@ -38,8 +38,7 @@ router.post("/:userId", async (req, res) => {
 });
 
 router.put("/:orderId/status", async (req, res) => {
-    debugger;
-    
+        
     const { body : {status }, params: { orderId } } = req;
     try {
         const order = await Order.updateOrder(orderId, status);

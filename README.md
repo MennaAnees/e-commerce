@@ -19,7 +19,8 @@ e-commerce platform developed by NodeJs and MySQL
 2- user cart:
     -add product to cart: '/user/userId/cart'
     -edit cart count: '/user/userId/cart/cartId'
-    -remove cart of the user: '/user/userId/cart' 
+    -remove cart of the user: '/user/userId/cart'
+    -list user cart: '/user/userId/cart'
 
 3-order:
     -user create order: '/order/userId'
