@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const { sequelize } = require('./models/');
-sequelize.sync({ force: true });
+sequelize.sync();
 
 const productController = require('./controllers/product');
 const cartController = require('./controllers/cart');
