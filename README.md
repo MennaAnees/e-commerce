@@ -1,4 +1,3 @@
-## e-commerce
 # e-commerce platform developed by NodeJs and MySQL 
 
 # instructions:
@@ -8,8 +7,8 @@
 2. run seed script to insert 2 users
 3. run server
 
-- API documentation:
 
+- API documentation:
 1. product crud operations
     - add : '/product'
     - edit: '/product/productId'
